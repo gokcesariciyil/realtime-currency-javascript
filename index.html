@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="tr">
+    <head></head>
+    <body>
+        <style>
+            table{
+                width: 22%;
+            }
+            table thead tr{
+                height: 40px;
+            }
+        </style>
+
+        <table>
+            <thead>
+                <tr>
+                    <td><strong>Name</strong></td>
+                    <td><strong>Buying</strong></td>
+                    <td><strong>Selling</strong></td>
+                    <td><strong>Change</strong></td>
+                </tr>
+            </thead>
+            <tbody id="demo">
+            </tbody>
+        </table>
+
+        <script>
+
+            function fetchCurrency(){
+                fetch('https://webapi.halkbank.com.tr/api/MarketInformation/', {
+                  method: 'GET',
+                  headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                  }
+                }).then(res => res.json())
+                  .then(res => myfunc(res.data.exchangeItems));
+            }
+            function myfunc(resArray){
+               let tableitem = "";
+               resArray.forEach(function (item){
+                   if(typeof item === 'undefined') {
+                       return
+                   }
+
+                   tableitem += '<tr>' +
+                            '<td>' + item.name + '</td>' +
+                            '<td>' + item.buying + '</td>' +
+                            '<td>' + item.selling + '</td>' +
+                            '<td>' + item.change + '</td>' +
+                       '</tr>'
+               });
+
+               document.getElementById("demo").innerHTML = tableitem;
+            }
+
+            fetchCurrency();
+            setInterval(function () {fetchCurrency() }, 10000);
+
+        </script>
+    </body>
+</html>
